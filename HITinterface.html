@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Crowd Project Template</title>
+		<link href='https://fonts.googleapis.com/css?family=McLaren|Luckiest+Guy|Bangers' rel='stylesheet' type='text/css'>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+		<!--remove if not responsive-->
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" >
+		
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
+		<style>
+			img{
+				vertical-align:middle;
+				width:100%;
+			}
+			.img-container{
+				padding:10px;
+				border:5px solid transparent;
+			}
+			.img-container:hover,.img-container.active{
+				border:5px solid #da4453;
+				cursor:pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Instruction</h1>
+			<p>You are asked to make a decision! (gasp) The context: <b id="context">Where should I go for summer break?</b> We ask that you make the decision seriously, as it's important for the person who asked your opinion!</p>
+			<div class="row" style="margin:2em 0">
+				<div class="col-sm-6 img-container">
+					<img id="choice1" class="select" data-value="1" src="http://www.maldives.com/wp-content/uploads/2016/01/Amari-Havodda-Maldives-1-3.jpg" />
+				</div>
+				<div class="col-sm-6 img-container">
+					<img id="choice2" class="select" data-value="2" src="http://caravan-camping-saechsischeschweiz.de/images/Basteibr%C3%BCcke_bearbeitet.jpg" />
+				</div>
+			</div>
+			<div class="text-center">
+				<form id="mturk_form">
+					<input type="hidden" name="selection" id="choice" />
+					<button type="submit" class="btn btn-submit">Submit</button>
+				</form>
+			</div>
+		</div>
+		<script type="text/javascript" src="mturk.js"></script>
+		<script>
+			$(document).ready(function(){
+				$(".img-container").click(function(){
+					$(".img-container").removeClass("active");
+					$(this).addClass("active");
+					var selection = $(this).find(".select").data("value");
+					$("#choice").val(selection);
+				})
+			})
+		</script>
+	</body>
+</html>
