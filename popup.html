@@ -6,20 +6,69 @@
  -->
 <html>
   <head>
-    <title>Getting Started Extension's Popup</title>
+    <title>FlipFlop!</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+      body{
+		background-color:#F5F7FA;
+        font-family: "Raleway", sans-serif;
         font-size: 100%;
+		margin:0;
+		text-align:center;
+		width:400px;
       }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
-      }
+	  button{
+		border:0;
+		border-radius:3px;
+		background-color:#8CC152;
+		color:white;
+		font-family: "Raleway" sans-serif;
+		padding:10px;
+		margin-bottom:20px;
+	  }
+	  input{
+		background-color:#F5F7FA;
+		border:0;
+		border-bottom:1px solid #A0D468;
+		display:block;
+		font-family: "Raleway" sans-serif;
+		margin:0 auto 20px;
+		padding:5px;
+		width:90%;
+	  }
+	  label{
+		color:#434A54;
+		display:block;
+		font-weight:bold;
+		margin:10px auto 5px;
+		width:90%;
+		text-align:left;
+	  }
+	  .header{
+		background-color:#8CC152;
+		color:white;
+		font-family: "Raleway" sans-serif;
+		margin:0 0 10px;
+		padding:5px 10px;
+		letter-spacing:1px;
+		position:relative;
+		text-transform:uppercase;
+		text-align:left;
+	  }
+	  .header .fa{
+		position:absolute;
+		right:10px;
+		top:5px;
+	  }
+	  .image{
+		background-color:#CCD1D9;
+		display:inline-block;
+		height:200px;
+		margin:10px 1%;
+		width:47%;
+	  }
     </style>
+	
 
     <!--
       - JavaScript and HTML must be in separate files: see our Content Security
@@ -30,8 +79,23 @@
     <script src="popup.js"></script>
   </head>
   <body>
-    <div id="status"></div>
-    <img id="image-result" hidden>
+	<div class="header">
+		Ask Mr Flop!
+		<i class="fa fa-cog"></i>
+	</div>
+	<form>
+		<label>Question</label>
+		<input type="text" placeholder="Give some context for your workers" />
+		<div class="images">
+			<div class="image">
+			</div>
+			<div class="image">
+			</div>
+		</div>
+		<label>Number of People</label>
+		<input type="text" placeholder="How many people?" />
+		<button type="submit">Decide for Me!</button>
+	</form>
   </body>
 </html>
 
