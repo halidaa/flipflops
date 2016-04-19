@@ -1,29 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Test Extension Options</title>
+  <title>FlipFlop Options</title>
   <style>
-    body: { padding: 10px; }
+    body { padding: 10px; }
+    div { margin-bottom: 20px;}
   </style>
 </head>
 
 <body>
-  Favorite color:
-  <select id="color">
-   <option value="red">red</option>
-   <option value="green">green</option>
-   <option value="blue">blue</option>
-   <option value="yellow">yellow</option>
-  </select>
+	<div>
+		<label>
+			Number of Opinions: 
+			<input type="number" placeholder="10" value="10" id="num_of_opinions">
+	  	</label>
+  	</div>
 
-  <label>
-    <input type="checkbox" id="like">
-    I like colors.
-  </label>
+  	<div>
+	  	<label>
+			<input type="checkbox" id="is_accelerated">
+			Always have "Accelerated" Results
+	  	</label>
+  	</div>
 
-  <div id="status"></div>
+  	<div>
+	  	<label>
+			<input type="checkbox" id="is_question_description">
+			Customize Question and Description
+	  	</label>
+  	</div>
+  
+  <div id="status" style="color:green;"></div>
+  
   <button id="save">Save</button>
 
+  <script src="jquery-2.2.0.min.js"></script>
   <script src="options.js"></script>
 </body>
 </html>
