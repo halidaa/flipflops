@@ -17,6 +17,10 @@
 	"background": {
 		"scripts": ["background.js"]
 	},
-	"permissions":["notifications","tabs"],
-	"web_accessible_resources":["icon_large.png"]
+	"permissions":["notifications","tabs", "storage"],
+	"web_accessible_resources":["icon_large.png"],
+	"options_ui" : {
+		"page" : "options.html",
+		"chrome_style" : true
+	}
 }
