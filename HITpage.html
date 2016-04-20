@@ -1,0 +1,77 @@
+<html>
+	<head>
+		<title>Crowd Project Template</title>
+		<link href='https://fonts.googleapis.com/css?family=McLaren|Luckiest+Guy|Bangers' rel='stylesheet' type='text/css'>
+		<!-- Latest compiled and minified CSS -->
+		<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
+
+		<!--remove if not responsive-->
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" >
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
+		<script src="jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="hit_script.js" /></script>
+		<style>
+				img{
+					vertical-align:middle;
+					width:20%;
+				}
+				#goldstandardquestion{
+					vertical-align:middle;
+					width:30%;
+				}
+				.img-container{
+					padding:10px;
+					border:5px solid transparent;
+				}
+				.hidden {
+				display:none;
+				}
+			</style>
+  </head>
+
+  <body>
+   <form id="mturk_form" name="mturk_form" method="POST">
+    <fieldset>
+				<h1>Instruction</h1>
+				<p>You are asked to make a decision! (gasp) <br />
+				From the folllowing two images below please pick the best option that answers: <b id="context">What should I wear to a birthday party?</b>
+				<br />
+				We ask that you make the decision seriously, as it's important for the person who asked your opinion!</p>
+				<br />
+				<div id="goldstandardquestion">
+						Before we begin, please answer the following question:
+						<br />	<br />
+						<b id="context">What is the color of the text in the image below:</b>
+						<br />
+						<img id="goldstandardquestion" class="select" data-value="1" src="yellow.png" />
+						<br />
+						yellow <input type="radio" class="modeClass" name="change_mode" value="Wrong Answer" />
+						green <input type="radio" class="modeClass" name="change_mode" value="Next Step" />
+		        <br />
+				</div>
+
+				<div id="next_step_form" class="hidden">
+						<div class="row" style="margin:2em 0">
+								<div class="col-sm-6 img-container">
+										<img id="choice1" class="select" data-value="2" src="http://lh5.ggpht.com/-7SPW_8FvqKw/VEWSuMazf4I/AAAAAAAE2S0/YQAB6o8uL80/s0/img2447df0bff0ad0504116cc95ab28d6c3.jpg" />
+										Image 1 <input type="radio" name="image_choice" value="image1" />
+								</div>
+							<br />
+								<div class="col-sm-6 img-container">
+										<img id="choice2" class="select" data-value="3" src="http://fashionstylexpress.weebly.com/uploads/4/7/1/8/47181275/2588445_orig.jpg" />
+										Image 2 <input type="radio" name="image_choice" value="image2" />
+								</div>
+								<br /> <br />
+								Reason for your choice: <input type="text" name="textbox1"><br><br>
+						</div>
+						<br />
+						<input type="submit" value="Submit"/>
+						<br />
+				</div>
+    </fieldset>
+  </form>
+
+  </body>
+</html>
