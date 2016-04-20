@@ -44,12 +44,10 @@ function restore_options() {
 
     // Shows Customization Panel
     if($("#is_customized").prop("checked")) {
-      $("#question_label").show();
-      $("#description_label").show();
+      $("#question_description").show();
     }
     else {
-      $("#question_label").hide();
-      $("#description_label").hide();
+      $("#question_description").hide();
     }
   });
 }
@@ -59,12 +57,10 @@ $(document).ready(function(){
 
   $("#is_customized").change(function() {
     if($(this).prop("checked")) {
-      $("#question_label").show();
-      $("#description_label").show();
+      $("#question_description").show();
     }
     else {
-      $("#question_label").hide();
-      $("#description_label").hide();
+     $("#question_description").hide();
     }
   });
 

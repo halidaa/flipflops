@@ -5,6 +5,8 @@
   <style>
     body { padding: 10px; }
     div { margin-bottom: 20px;}
+    textarea {resize: none;}
+    #question_description {margin-left: 20px;}
   </style>
 </head>
 
@@ -29,18 +31,22 @@
   			Customize Question and Description
 	  	</label>
     </div>
-    <div id="question_label">
-      <label>
-        Question
-        <textarea id="question"></textarea>
-      </label>
+
+    <div id="question_description">
+      <div>
+        <label>
+          Question<br>
+          <textarea id="question" cols="40"></textarea>
+        </label>
+      </div>
+
+      <div>  
+        <label>
+          Description <br>
+          <textarea id="description" cols="40"></textarea>
+        </label>
+    	</div>
     </div>
-    <div id="description_label">  
-      <label>
-        Description
-        <textarea id="description"></textarea>
-      </label>
-  	</div>
   
   <div id="status" style="color:green;"></div>
   
