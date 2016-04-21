@@ -1,12 +1,13 @@
 {
 	"manifest_version": 2,
 	"name": "FlipFlops",
-	"version": "0.1",
+	"version": "1.0",
 	"content_scripts":[
 		{
 			"matches": [
-			  "<all_urls>"
-			],
+                "http://*/*",
+                "https://*/*"
+            ],
 			"js": ["jquery-2.2.0.min.js","content.js"]
 		}
 	],
@@ -17,7 +18,7 @@
 	"background": {
 		"scripts": ["background.js"]
 	},
-	"permissions":["notifications","tabs", "storage"],
+	"permissions":["notifications","tabs","storage"],
 	"web_accessible_resources":["icon_large.png"],
 	"options_ui" : {
 		"page" : "options.html",

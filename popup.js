@@ -1,118 +1,196 @@
-// Copyright (c) 2014 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+var pageImages = [];
+var currentImageIdx = [];
+		
+$(document).ready(function() {
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, {message: "get_all_images"}, function(response) {
+				pageImages = response.allImages;
+				$(".options-container").css("background-image","url("+pageImages[0]+")");
+				currentImageIdx["image1"] = 0;
+				currentImageIdx["image2"] = 0;
+			});
+		});
+	});
+	
+	chrome.storage.sync.get(null, function(items) {
+		if (!chrome.runtime.error) {
+		  $("#question").val(items.question);
+		  $("#num_of_opinions").val(items.num_of_opinions);
+		  if(items.image1 != undefined && items.image1 != ""){
+			$("#image1").css("background-image","url("+items.image1+")");
+			var _parent = $("#image1");
+			_parent.find(".image-options").hide();
+			_parent.find(".close-button").show();
+		  }
+		  if(items.image2 != undefined && items.image2 != ""){
+			$("#image2").css("background-image","url("+items.image2+")");
+			var _parent = $("#image2");
+			_parent.find(".image-options").hide();
+			_parent.find(".close-button").show();
+		  }
+		}
+	});
+	
+	$(".fa-cog").click(function(){
+		chrome.runtime.openOptionsPage(function(){});
+	})
+	
+	$(".click").click(function(){
+		if(pageImages.length == 0){
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+				chrome.tabs.sendMessage(tabs[0].id, {message: "get_all_images"}, function(response) {
+					pageImages = response.allImages;
+					$(".options-container").css("background-image","url("+pageImages[0]+")");
+					currentImageIdx["image1"] = 0;
+					currentImageIdx["image2"] = 0;
+				});
+			});
+		}
+		var _parent = $(this).parents(".image");
+		_parent.find(".image-options").fadeOut();
+		_parent.find(".close-button").fadeIn();
+		_parent.find(".select-input").fadeIn();	
+	})
 
-/**
- * Get the current URL.
- *
- * @param {function(string)} callback - called when the URL of the current tab
- *   is found.
- */
-function getCurrentTabUrl(callback) {
-  // Query filter to be passed to chrome.tabs.query - see
-  // https://developer.chrome.com/extensions/tabs#method-query
-  var queryInfo = {
-    active: true,
-    currentWindow: true
-  };
+	$(".paste").click(function(){
+		var _parent = $(this).parents(".image");
+		_parent.find(".image-options").fadeOut();
+		_parent.find(".close-button").fadeIn();
+		_parent.find(".link-input").fadeIn();
+	})
 
-  chrome.tabs.query(queryInfo, function(tabs) {
-    // chrome.tabs.query invokes the callback with a list of tabs that match the
-    // query. When the popup is opened, there is certainly a window and at least
-    // one tab, so we can safely assume that |tabs| is a non-empty array.
-    // A window can only have one active tab at a time, so the array consists of
-    // exactly one tab.
-    var tab = tabs[0];
+	$(".upload").click(function(){
+		var _parent = $(this).parents(".image");
+		_parent.find(".image-options").fadeOut();
+		_parent.find(".close-button").fadeIn();
+		_parent.find(".upload-input").fadeIn();
+	})
 
-    // A tab is a plain object that provides information about the tab.
-    // See https://developer.chrome.com/extensions/tabs#type-Tab
-    var url = tab.url;
-
-    // tab.url is only available if the "activeTab" permission is declared.
-    // If you want to see the URL of other tabs (e.g. after removing active:true
-    // from |queryInfo|), then the "tabs" permission is required to see their
-    // "url" properties.
-    console.assert(typeof url == 'string', 'tab.url should be a string');
-
-    callback(url);
-  });
-
-  // Most methods of the Chrome extension APIs are asynchronous. This means that
-  // you CANNOT do something like this:
-  //
-  // var url;
-  // chrome.tabs.query(queryInfo, function(tabs) {
-  //   url = tabs[0].url;
-  // });
-  // alert(url); // Shows "undefined", because chrome.tabs.query is async.
-}
-
-/**
- * @param {string} searchTerm - Search term for Google Image search.
- * @param {function(string,number,number)} callback - Called when an image has
- *   been found. The callback gets the URL, width and height of the image.
- * @param {function(string)} errorCallback - Called when the image is not found.
- *   The callback gets a string that describes the failure reason.
- */
-function getImageUrl(searchTerm, callback, errorCallback) {
-  // Google image search - 100 searches per day.
-  // https://developers.google.com/image-search/
-  var searchUrl = 'https://ajax.googleapis.com/ajax/services/search/images' +
-    '?v=1.0&q=' + encodeURIComponent(searchTerm);
-  var x = new XMLHttpRequest();
-  x.open('GET', searchUrl);
-  // The Google image search API responds with JSON, so let Chrome parse it.
-  x.responseType = 'json';
-  x.onload = function() {
-    // Parse and process the response from Google Image Search.
-    var response = x.response;
-    if (!response || !response.responseData || !response.responseData.results ||
-        response.responseData.results.length === 0) {
-      errorCallback('No response from Google Image search!');
-      return;
-    }
-    var firstResult = response.responseData.results[0];
-    // Take the thumbnail instead of the full image to get an approximately
-    // consistent image size.
-    var imageUrl = firstResult.tbUrl;
-    var width = parseInt(firstResult.tbWidth);
-    var height = parseInt(firstResult.tbHeight);
-    console.assert(
-        typeof imageUrl == 'string' && !isNaN(width) && !isNaN(height),
-        'Unexpected respose from the Google Image Search API!');
-    callback(imageUrl, width, height);
-  };
-  x.onerror = function() {
-    errorCallback('Network error.');
-  };
-  x.send();
-}
-
-function renderStatus(statusText) {
-  document.getElementById('status').textContent = statusText;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  getCurrentTabUrl(function(url) {
-    // Put the image URL in Google search.
-    renderStatus('Performing Google Image search for ' + url);
-
-    getImageUrl(url, function(imageUrl, width, height) {
-
-      renderStatus('Search term: ' + url + '\n' +
-          'Google image search result: ' + imageUrl);
-      var imageResult = document.getElementById('image-result');
-      // Explicitly set the width/height to minimize the number of reflows. For
-      // a single image, this does not matter, but if you're going to embed
-      // multiple external images in your page, then the absence of width/height
-      // attributes causes the popup to resize multiple times.
-      imageResult.width = width;
-      imageResult.height = height;
-      imageResult.src = imageUrl;
-      imageResult.hidden = false;
-
-    }, function(errorMessage) {
-      renderStatus('Cannot display image. ' + errorMessage);
+	$(".link-input .go-button").click(function(e){
+		e.preventDefault();
+		var _this = $(this);
+		var _parent = $(this).parents(".link-input");
+		_this.find(".fa").removeClass("fa-check").addClass("fa-circle-o-notch fa-spin");
+		if(_parent.find("input").val() != ""){
+			var _target = _parent.data("target");
+			var _src = _parent.find("input").val();
+			$("#"+_target).css("background-image","url("+_src+")");
+			var storage = new Object();
+			storage[_target] = _src;
+			chrome.storage.sync.set(storage, function() {
+				if (chrome.runtime.error) {
+				  console.log("Runtime error.");
+				}
+			})
+			var _img = new Image();
+			_img.src = _src;
+			_img.onload = function(){
+				_parent.fadeOut();
+				_this.find(".fa").addClass("fa-check").removeClass("fa-circle-o-notch fa-spin");
+			};
+		}
+	})
+	
+	$(".upload-input .go-button").click(function(e){
+		e.preventDefault();
+		var _this = $(this);
+		var _parent = $(this).parents(".upload-input");
+		var file = _parent.find("input")[0].files[0];
+		_this.find(".fa").removeClass("fa-check").addClass("fa-circle-o-notch fa-spin");
+		if (file) {
+			var _target = _parent.data("target");
+			var reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = function(e) {
+				$("#"+_target).css("background-image","url("+e.target.result+")");
+				_parent.fadeOut();
+				_this.find(".fa").addClass("fa-check").removeClass("fa-circle-o-notch fa-spin");
+			};
+		}
+	})
+	
+	$(".select-input .go-button").click(function(e){
+		e.preventDefault();
+		var _this = $(this);
+		_this.find(".fa").removeClass("fa-check").addClass("fa-circle-o-notch fa-spin");
+		var _parent = $(this).parents(".select-input");
+		var _target = _parent.data("target");
+		var _src = pageImages[currentImageIdx[_target]];
+		$("#"+_target).css("background-image","url("+_src+")");
+		var storage = new Object();
+		storage[_target] = _src;
+		chrome.storage.sync.set(storage, function() {
+			if (chrome.runtime.error) {
+			  console.log("Runtime error.");
+			}
+		})		
+		_parent.fadeOut();
+		_this.find(".fa").addClass("fa-check").removeClass("fa-circle-o-notch fa-spin");
+	})
+	
+	$(".select-input .nav-button").click(function(e){
+		e.preventDefault();
+		var _parent = $(this).parents(".select-input");
+		var _target = _parent.data("target");
+		if($(this).hasClass("prev-button")){
+			if (currentImageIdx[_target] == 0) currentImageIdx[_target] = pageImages.length - 1;
+			else currentImageIdx[_target]--;
+		}
+		else{
+			if (currentImageIdx[_target] == pageImages.length - 1) currentImageIdx[_target] = 0;
+			else currentImageIdx[_target]++;
+		}
+		$("#"+_target).find(".options-container").css("background-image","url("+pageImages[currentImageIdx[_target]]+")");
+	})
+	
+	$(".close-button").click(function(){
+		var _parent = $(this).parents(".image");
+		chrome.storage.sync.remove(_parent.attr("id"), function() {
+			if (chrome.runtime.error) {
+			  console.log("Runtime error.");
+			}
+		})
+		_parent.css("background-image","none");
+		_parent.find(".image-options").fadeIn();
+		_parent.find(".link-input").fadeOut();
+		_parent.find(".upload-input").fadeOut();
+		_parent.find(".link-input").find("input").val("");
+		_parent.find(".upload-input").find("input").val("");
+		_parent.find(".close-button").fadeOut();
+	})
+	
+	$("#question").keyup(function(){
+		var question = $(this).val();
+		chrome.storage.sync.set({ "question" : question }, function() {
+			if (chrome.runtime.error) {
+			  console.log("Runtime error.");
+			}
+		})
+	})
+	
+	$("#num_of_opinions").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) || 
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
     });
-  });
-});
+	
+	$("#num_of_opinions").keyup(function(){
+		var n = $(this).val();
+		chrome.storage.sync.set({ "num_of_opinions" : n }, function() {
+			if (chrome.runtime.error) {
+			  console.log("Runtime error.");
+			}
+		})
+	})
+})
