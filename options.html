@@ -14,15 +14,27 @@
 	<div>
 		<label>
 			Number of Opinions: 
-			<input type="number" placeholder="10" value="10" id="num_of_opinions">
+			<input type="number" placeholder="5" value="5" id="num_of_opinions">
 	  	</label>
-  	</div>
+    </div>
 
-  	<div>
+    <div>
+      <label>
+        Payment Rate (cents/opinion):
+        <input type="number" placeholder="5" value="5" id="payment_rate">
+      </label>
+    </div>
+
+    <div>
+      <p>Estimated Amount of Time for Response: <span id="time_estimate" style="color:blue;">60</span><span style="color:blue;" > min</span></p>
+    </div>
+  	
+    <div>
 	  	<label>
-			<input type="checkbox" id="is_accelerated">
-			Always have "Accelerated" Results
+  			<input type="checkbox" id="is_accelerated">
+  			Always have "Accelerated" Results
 	  	</label>
+      <p><em style="color:red;">Immediately send results when there is a clear majority.</em></p>
   	</div>
 
   	<div>
@@ -46,6 +58,7 @@
           <textarea id="description" cols="40"></textarea>
         </label>
     	</div>
+   
     </div>
   
   <div id="status" style="color:green;"></div>
