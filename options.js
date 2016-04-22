@@ -1,5 +1,6 @@
 function save_options() {
   var num_of_opinions = $("#num_of_opinions").val();
+  var payment_rate = $("#payment_rate").val();
   var is_accelerated = $("#is_accelerated").prop("checked");
   var is_customized = $("#is_customized").prop("checked");
   var question, description = "";
@@ -12,6 +13,7 @@ function save_options() {
   // Saves options to chrome.storage.sync.
   chrome.storage.sync.set({
     num_of_opinions: num_of_opinions,
+    payment_rate: payment_rate,
     is_accelerated: is_accelerated,
     is_customized: is_customized,
     question: question,
@@ -30,13 +32,15 @@ function save_options() {
 // stored in chrome.storage.
 function restore_options() {
   chrome.storage.sync.get({
-    num_of_opinions: '10',
+    num_of_opinions: 10,
+    payment_rate: 5,
     is_accelerated: false,
     is_customized: false,
     question: "",
     description: ""
   }, function(items) {
     $("#num_of_opinions").val(items.num_of_opinions);
+    $("#payment_rate").val(items.payment_rate);
     $("#is_accelerated").prop("checked", items.is_accelerated);
     $("#is_customized").prop("checked", items.is_customized);
     $("#question").val(items.question);
@@ -49,11 +53,28 @@ function restore_options() {
     else {
       $("#question_description").hide();
     }
+
+    // Restore time estimate
+    var num_of_opinions = items.num_of_opinions;
+    var payment_rate = items.payment_rate; 
+    $("#time_estimate").text(time_estimate(num_of_opinions, payment_rate));
   });
+}
+
+function time_estimate(num_of_opinions, payment_rate){
+  var a = 60/payment_rate;
+  var b = num_of_opinions;
+  return Math.round(10 * a) / 10;
 }
 
 $(document).ready(function(){
   restore_options();
+
+  $("#num_of_opinions, #payment_rate").change(function(){
+    var num_of_opinions = $("#num_of_opinions").val();
+    var payment_rate = $("#payment_rate").val(); 
+    $("#time_estimate").text(time_estimate(num_of_opinions, payment_rate));
+  });
 
   $("#is_customized").change(function() {
     if($(this).prop("checked")) {
