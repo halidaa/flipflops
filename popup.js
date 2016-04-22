@@ -1,6 +1,8 @@
 var pageImages = [];
 var currentImageIdx = [];
-		
+	currentImageIdx["image1"] = 0;
+	currentImageIdx["image2"] = 0;
+
 $(document).ready(function() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -17,6 +19,15 @@ $(document).ready(function() {
 		if (!chrome.runtime.error) {
 		  $("#question").val(items.question);
 		  $("#num_of_opinions").val(items.num_of_opinions);
+		  $("#payment_rate").val(items.payment_rate);
+		  if(items.sessionQuestion != undefined)
+			$("#question").val(items.sessionQuestion);
+		  if (items.sessionOpinion != undefined)
+			$("#num_of_opinions").val(items.sessionOpinion);
+		  if (items.sessionPay != undefined)
+			$("#payment_rate").val(items.sessionPay);
+		  defaultQuestion = items.question;
+		  defaultNOpinions = items.num_of_opinions;
 		  if(items.image1 != undefined && items.image1 != ""){
 			$("#image1").css("background-image","url("+items.image1+")");
 			var _parent = $("#image1");
@@ -41,9 +52,12 @@ $(document).ready(function() {
 			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 				chrome.tabs.sendMessage(tabs[0].id, {message: "get_all_images"}, function(response) {
 					pageImages = response.allImages;
-					$(".options-container").css("background-image","url("+pageImages[0]+")");
-					currentImageIdx["image1"] = 0;
-					currentImageIdx["image2"] = 0;
+					if(pageImages.length > 0){
+						$(".options-container").css("background-image","url("+pageImages[0]+")");
+					}
+					else{
+						$(".options-container").text("No image found");
+					}
 				});
 			});
 		}
@@ -117,14 +131,21 @@ $(document).ready(function() {
 		var _parent = $(this).parents(".select-input");
 		var _target = _parent.data("target");
 		var _src = pageImages[currentImageIdx[_target]];
-		$("#"+_target).css("background-image","url("+_src+")");
-		var storage = new Object();
-		storage[_target] = _src;
-		chrome.storage.sync.set(storage, function() {
-			if (chrome.runtime.error) {
-			  console.log("Runtime error.");
-			}
-		})		
+		if(_src == undefined){
+			_parent.parents(".image").find(".image-options").fadeIn();
+			_parent.parents(".image").find(".close-button").fadeOut();
+			_parent.parents(".image").find(".options-container").text("");
+		}
+		else{
+			$("#"+_target).css("background-image","url("+_src+")");
+			var storage = new Object();
+			storage[_target] = _src;
+			chrome.storage.sync.set(storage, function() {
+				if (chrome.runtime.error) {
+				  console.log("Runtime error.");
+				}
+			})
+		}		
 		_parent.fadeOut();
 		_this.find(".fa").addClass("fa-check").removeClass("fa-circle-o-notch fa-spin");
 	})
@@ -155,14 +176,34 @@ $(document).ready(function() {
 		_parent.find(".image-options").fadeIn();
 		_parent.find(".link-input").fadeOut();
 		_parent.find(".upload-input").fadeOut();
+		_parent.find(".select-input").fadeOut();
 		_parent.find(".link-input").find("input").val("");
 		_parent.find(".upload-input").find("input").val("");
+		_parent.find(".options-container").text("");
 		_parent.find(".close-button").fadeOut();
 	})
 	
 	$("#question").keyup(function(){
 		var question = $(this).val();
-		chrome.storage.sync.set({ "question" : question }, function() {
+		chrome.storage.sync.set({ "sessionQuestion" : question }, function() {
+			if (chrome.runtime.error) {
+			  console.log("Runtime error.");
+			}
+		})
+	})
+	
+	$("#num_of_opinions").keyup(function(){
+		var n = $(this).val();
+		chrome.storage.sync.set({ "sessionOpinion" : n }, function() {
+			if (chrome.runtime.error) {
+			  console.log("Runtime error.");
+			}
+		})
+	})
+	
+	$("#payment_rate").keyup(function(){
+		var n = $(this).val();
+		chrome.storage.sync.set({ "sessionPay" : n }, function() {
 			if (chrome.runtime.error) {
 			  console.log("Runtime error.");
 			}
@@ -185,12 +226,16 @@ $(document).ready(function() {
         }
     });
 	
-	$("#num_of_opinions").keyup(function(){
-		var n = $(this).val();
-		chrome.storage.sync.set({ "num_of_opinions" : n }, function() {
+	$("#flipflop-form").submit(function(e){
+		e.preventDefault();
+		var toRemove = ['sessionQuestion','sessionPay','sessionOpinion','image1','image2','undefined'];
+		chrome.storage.sync.remove(toRemove, function() {
 			if (chrome.runtime.error) {
 			  console.log("Runtime error.");
 			}
 		})
+		chrome.storage.sync.get(null, function(items) {
+		})
+		//$(this).submit();
 	})
 })

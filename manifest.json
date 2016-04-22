@@ -18,7 +18,7 @@
 	"background": {
 		"scripts": ["background.js"]
 	},
-	"permissions":["notifications","tabs","storage"],
+	"permissions":["notifications","tabs","storage","http://www.StevenJamesMoore.com/"],
 	"web_accessible_resources":["icon_large.png"],
 	"options_ui" : {
 		"page" : "options.html",

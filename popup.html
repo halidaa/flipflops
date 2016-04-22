@@ -17,9 +17,9 @@
 		Ask Mr Flop!
 		<i class="fa fa-cog"></i>
 	</div>
-	<form>
+	<form id="flipflop-form">
 		<label>Question</label>
-		<input type="text" placeholder="Give some context for your workers" id="question" />
+		<input type="text" placeholder="Give some context for your workers" id="question" name="question" />
 		<div class="images">
 			<div class="image" id="image1">
 				<div class="image-options">
@@ -66,9 +66,15 @@
 				<div class="close-button" data-target="image2" title="Change image"><i class="fa fa-times"></i></div>
 			</div>
 		</div>
+		<label>Pay per person (in CENTS)</label>
+		<input type="text" placeholder="How much do you want to pay each opinion" id="payment_rate" name="payment_rate" />
 		<label>Number of People</label>
-		<input type="text" placeholder="Tip: Pick an odd number!" id="num_of_opinions" />
-		<button type="submit">Decide for Me!</button>
+		<input class="inline" type="text" placeholder="Tip: Pick an odd number!" id="num_of_opinions" name="num_of_opinions" />
+		<p class="checkbox-wrapper">
+			<input type="checkbox" id="is_accelerated" name="is_accelerated" />
+			<label for="is_accelerated">Accellerate</label>
+		</p>
+		<button type="submit">DECIDE FOR ME!</button>
 	</form>
   </body>
 </html>

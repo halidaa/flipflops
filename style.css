@@ -17,6 +17,7 @@ button{
 }
 button:hover{
 	cursor:pointer;
+	background-color:#A0D468;
 }
 input{
 	background-color:#F5F7FA;
@@ -27,6 +28,20 @@ input{
 	margin:0 auto 20px;
 	padding:5px;
 	width:90%;
+}
+input.inline{
+	display:inline-block;
+	width:50%;
+}
+.checkbox-wrapper{
+	display:inline-block;
+	margin:0 33px 0;
+}
+.checkbox-wrapper input, .checkbox-wrapper label{
+	display:inline-block;
+	width:auto;
+	font-weight:normal;
+	font-size:14px;
 }
 input:focus,
   select:focus,
@@ -147,4 +162,5 @@ label{
 	background-repeat:no-repeat;
 	background-position:center;
 	background-size:contain;
+	line-height:170px;
 }
