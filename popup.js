@@ -252,7 +252,7 @@ $(document).ready(function() {
 					activeHIT.push(JSON.parse(response).HitID);
 					
 					var background = chrome.extension.getBackgroundPage();
-					background.poolAnswers(activeHIT);
+					background.tryGetResults();
 					chrome.storage.sync.set({"activeHIT" : activeHIT},function(){});
 					
 					var toRemove = ['sessionQuestion','sessionPay','sessionOpinion','sessionAccelerate','image1','image2'];

@@ -1,31 +1,26 @@
-function poolAnswers(ids){
-	var _storage = ids;
-	for (var i = 0; i < _storage.length - 1; i++){
-		var _item = _storage[i];
-		$.ajax({
-			url:"http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_item,
-			dataType:"json",
-			beforeSend:function(){
-				console.log("tried:","http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_item)
-			},
-			success:function(response){
-				if(response.ready){
-					triggerNotification(_item,JSON.parse(response));
-					var remove = _storage.indexOf(_item);
-					if(remove > -1) _storage.splice(remove,1);
-				}
-				else{
-					setTimeout(function(){
-						var _ids = [];
-						chrome.storage.sync.get("activeHIT",function(items){
-							_ids = items.activeHIT;
-							poolAnswers(_ids);
-						})
-					},180000)
-				}
+function poolAnswers(hitID){
+	console.log('\n',Date.now());
+	var _hitID = hitID;
+	$.ajax({
+		url:"http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_hitID,
+		dataType:"json",
+		beforeSend:function(){
+			console.log("tried:","http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_hitID)
+		},
+		success:function(response){
+			if(response.ready){
+				triggerNotification(_hitID,JSON.parse(response));
+				var remove = _storage.indexOf(_hitID);
+				if(remove > -1) _storage.splice(remove,1);
+				chrome.storage.sync.set({"activeHIT":_storage},function(){})
 			}
-		})
-	}
+			else{
+				setTimeout(function(){
+					poolAnswers(_hitID);
+				},180000)
+			}
+		}
+	})
 }
 
 function triggerNotification(hitID,result){
@@ -44,4 +39,25 @@ function triggerNotification(hitID,result){
 		imageUrl: decodeURIComponent(result.WinningUrl)
 	}
 	chrome.notifications.create(hitID, options, function(){});
+}
+
+function tryGetResults(){
+	var _ids = [];
+	chrome.storage.sync.get("activeHIT",function(items){
+		_ids = items.activeHIT;
+		for(var i = 0; i < _ids.length; i++){
+			poolAnswers(_ids[i]);
+		}
+	})
+}
+
+function checkCurrentResult(hitID){
+	var _hitID = hitID;
+	$.ajax({
+		url:"http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_hitID,
+		dataType:"json",
+		success:function(response){
+			console.log(response)
+		}
+	})
 }
