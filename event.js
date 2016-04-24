@@ -6,12 +6,23 @@ function poolAnswers(ids){
 			url:"http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_item,
 			dataType:"json",
 			beforeSend:function(){
-				console.log("http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_item)
+				console.log("tried:","http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_item)
 			},
 			success:function(response){
-				triggerNotification(_item,JSON.parse(response));
-				var remove = _storage.indexOf(_item);
-				if(remove > -1) _storage.splice(remove,1);
+				if(response.ready){
+					triggerNotification(_item,JSON.parse(response));
+					var remove = _storage.indexOf(_item);
+					if(remove > -1) _storage.splice(remove,1);
+				}
+				else{
+					setTimeout(function(){
+						var _ids = [];
+						chrome.storage.sync.get("activeHIT",function(items){
+							_ids = items.activeHIT;
+							poolAnswers(_ids);
+						})
+					},180000)
+				}
 			}
 		})
 	}

@@ -1,7 +1,14 @@
 {
 	"manifest_version": 2,
 	"name": "FlipFlops",
-	"version": "1.0",
+	
+	"description": "The last decision you'll ever have to make - a chrome extension that allows the crowd to do all the decision makings for you.",
+	"icons": { 
+		"16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png" 
+	},
+	"version": "2.016",
 	"content_scripts":[
 		{
 			"matches": [
@@ -17,7 +24,7 @@
 	},
 	"background": {
 		"scripts": ["jquery-2.2.0.min.js","event.js"],
-        "persistent": false
+		"persistent":false
 	},
 	"permissions":["notifications","tabs","storage","http://www.StevenJamesMoore.com/"],
 	"web_accessible_resources":["icon_large.png"],

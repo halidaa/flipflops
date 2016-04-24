@@ -1,3 +1,5 @@
+var isPooling = false;
+
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     var activeTab = tabs[0];
@@ -5,13 +7,13 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   });
 });
 
-function triggerNotification(_img, stat){
-	var options = {
-		type: "image",
-		title: "A Message from Mr Flop",
-		message: "The crowd has spoken! With "+stat.winPercentage+"% of people's support, this is the winning option:",
-		iconUrl: "icon_larger.png",
-		imageUrl: _img
-	}
-	chrome.notifications.create(stat.questionID, options, function(){});
-}
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if( request.message === "pool_for_answer" ) {
+		if(!isPooling){
+			sendResponse({message:"gotem"})
+		}
+    }
+	return true;
+  }
+);
