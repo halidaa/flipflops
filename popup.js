@@ -5,13 +5,13 @@ var currentImageIdx = [];
 
 $(document).ready(function() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-			chrome.tabs.sendMessage(tabs[0].id, {message: "get_all_images"}, function(response) {
+		chrome.tabs.sendMessage(tabs[0].id, {message: "get_all_images"}, function(response) {
+			if(response){
 				pageImages = response.allImages;
 				$(".options-container").css("background-image","url("+pageImages[0]+")");
 				currentImageIdx["image1"] = 0;
 				currentImageIdx["image2"] = 0;
-			});
+			}
 		});
 	});
 	
@@ -26,8 +26,6 @@ $(document).ready(function() {
 			$("#num_of_opinions").val(items.sessionOpinion);
 		  if (items.sessionPay != undefined)
 			$("#payment_rate").val(items.sessionPay);
-		  defaultQuestion = items.question;
-		  defaultNOpinions = items.num_of_opinions;
 		  if(items.image1 != undefined && items.image1 != ""){
 			$("#image1").css("background-image","url("+items.image1+")");
 			var _parent = $("#image1");
@@ -40,6 +38,8 @@ $(document).ready(function() {
 			_parent.find(".image-options").hide();
 			_parent.find(".close-button").show();
 		  }
+		  if(items.activeHIT == undefined)
+			  chrome.storage.sync.set({"activeHIT" : []},function(){});
 		}
 	});
 	
@@ -228,14 +228,55 @@ $(document).ready(function() {
 	
 	$("#flipflop-form").submit(function(e){
 		e.preventDefault();
-		var toRemove = ['sessionQuestion','sessionPay','sessionOpinion','image1','image2','undefined'];
-		chrome.storage.sync.remove(toRemove, function() {
+		$(".loading").fadeIn();
+		chrome.storage.sync.get(null, function(items) {
+			var _storage = items;
+			if(_storage.sessionQuestion == undefined || _storage.sessionQuestion == "") _storage.sessionQuestion = _storage.question;
+			if(_storage.sessionOpinion == undefined) _storage.sessionOpinion = _storage.num_of_opinions;
+			if(_storage.sessionPay == undefined) _storage.sessionPay = _storage.payment_rate;
+			if(_storage.sessionAccelerate == undefined) _storage.sessionAccelerate = _storage.is_accelerated;
+			$.ajax({
+				url: "http://stevenjamesmoore.com/api/values/CreateNewHIT",
+				dataType: "json",
+				data:{
+					image1:_storage.image1,
+					image2:_storage.image2,
+					question:_storage.sessionQuestion,
+					payment_rate:_storage.sessionPay,
+					num_of_opinions:_storage.sessionOpinion,
+					is_accelerated:_storage.sessionAccelerate,
+					description:_storage.description
+				},
+				success:function(response){
+					var activeHIT = _storage.activeHIT;
+					activeHIT.push(JSON.parse(response).HitID);
+					
+					var background = chrome.extension.getBackgroundPage();
+					background.poolAnswers(activeHIT);
+					chrome.storage.sync.set({"activeHIT" : activeHIT},function(){});
+					
+					var toRemove = ['sessionQuestion','sessionPay','sessionOpinion','sessionAccelerate','image1','image2'];
+					chrome.storage.sync.remove(toRemove, function() {
+						if (chrome.runtime.error) {
+						  console.log("Runtime error.");
+						}
+					})
+					
+					$(".loading").fadeOut();
+					$("form input").val("");
+					$(".image").css("background-image","none");
+					$(".image").find(".image-options").show();
+					$(".image").find(".link-input").hide();
+					$(".image").find(".upload-input").hide();
+					$(".image").find(".select-input").hide();
+					$(".image").find(".options-container").text("");
+					$(".image").find(".close-button").hide();
+					window.close();
+				}
+			})
 			if (chrome.runtime.error) {
 			  console.log("Runtime error.");
 			}
 		})
-		chrome.storage.sync.get(null, function(items) {
-		})
-		//$(this).submit();
 	})
 })

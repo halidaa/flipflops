@@ -16,7 +16,8 @@
 		"default_popup":"popup.html"
 	},
 	"background": {
-		"scripts": ["background.js"]
+		"scripts": ["jquery-2.2.0.min.js","event.js"],
+        "persistent": false
 	},
 	"permissions":["notifications","tabs","storage","http://www.StevenJamesMoore.com/"],
 	"web_accessible_resources":["icon_large.png"],

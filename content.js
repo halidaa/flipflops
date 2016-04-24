@@ -19,3 +19,14 @@ function getAllImages() {
 			pageImages.push($(this)[0].src);
 	})
 }
+
+function triggerNotification(_img, stat){
+	var options = {
+		type: "image",
+		title: "A Message from Mr Flop",
+		message: "The crowd has spoken! With "+stat.winPercentage+"% of people's support, this is the winning option:",
+		iconUrl: "icon_larger.png",
+		imageUrl: _img
+	}
+	chrome.notifications.create(stat.questionID, options, function(){});
+}
