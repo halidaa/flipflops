@@ -8,11 +8,22 @@ function poolAnswers(hitID){
 			console.log("tried:","http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_hitID)
 		},
 		success:function(response){
-			if(response.ready){
-				triggerNotification(_hitID,JSON.parse(response));
-				var remove = _storage.indexOf(_hitID);
-				if(remove > -1) _storage.splice(remove,1);
-				chrome.storage.sync.set({"activeHIT":_storage},function(){})
+			var resp;
+			try{
+				resp = JSON.parse(response);
+			}
+			catch(e){
+				resp = "{'Ready':false}";
+			}
+			if(resp.Ready){
+				triggerNotification(_hitID,resp);
+				var _storage = [];
+				chrome.storage.sync.get("activeHIT",function(items){
+					_storage = items.activeHIT;
+					var remove = _storage.indexOf(_hitID);
+					if(remove > -1) _storage.splice(remove,1);
+					chrome.storage.sync.set({"activeHIT":_storage},function(){})
+				})
 			}
 			else{
 				setTimeout(function(){
@@ -57,7 +68,7 @@ function checkCurrentResult(hitID){
 		url:"http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_hitID,
 		dataType:"json",
 		success:function(response){
-			console.log(response)
+			console.log(JSON.parse(response))
 		}
 	})
 }

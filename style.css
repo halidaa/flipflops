@@ -68,10 +68,13 @@ label{
 	text-transform:uppercase;
 	text-align:left;
 }
-.header .fa{
+.header .icons{
 	position:absolute;
 	right:10px;
 	top:6px;
+}
+.header .fa{
+	margin-left:5px;
 }
 .header .fa:hover{
 	cursor:pointer;
@@ -164,7 +167,7 @@ label{
 	background-size:contain;
 	line-height:170px;
 }
-.loading{
+#results,.loading{
 	position:absolute;
 	top:30px;
 	bottom:0;
@@ -174,4 +177,26 @@ label{
 	color:white;
 	padding:200px 0;
 	display:none;
+}
+#results{
+	background:#FAF7FA;
+	padding-top:50px;
+}
+#results .fa{
+	position:absolute;
+	right:10px;
+	top:10px;
+	color:#656d78;
+}
+#results .fa:hover{
+	cursor:pointer;
+}
+#results .json{
+	color:#656d78;
+	padding:20px;
+	font-size:.8em;
+	line-height:1.5em;
+	text-align:left;
+	overflow-y:scroll;
+	height:275px;
 }

@@ -15,7 +15,10 @@
   <body>
 	<div class="header">
 		Ask Mr Flop!
-		<i class="fa fa-cog"></i>
+		<div class="icons">
+			<i class="fa fa-list"></i>
+			<i class="fa fa-cog"></i>
+		</div>
 	</div>
 	<form id="flipflop-form">
 		<label>Question</label>
@@ -78,6 +81,12 @@
 	</form>
 	<div class="loading">
 		<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw margin-bottom"></i>
+	</div>
+	<div id="results">
+		<i class="fa fa-times fa-2x"></i>
+		<button>FETCH CURRENT RESULTS</button>
+		<div class="json">
+		</div>
 	</div>
   </body>
 </html>

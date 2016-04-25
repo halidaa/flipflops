@@ -47,6 +47,36 @@ $(document).ready(function() {
 		chrome.runtime.openOptionsPage(function(){});
 	})
 	
+	$(".fa-list").click(function(){
+		$("#results").fadeIn();
+	})
+	
+	$("#results .fa-times").click(function(){
+		$("#results .json").text("");
+		$("#results").fadeOut();
+	})
+	
+	$("#results button").click(function(e){
+		e.preventDefault();
+		var _ids = [];
+		chrome.storage.sync.get("activeHIT",function(items){
+			_ids = items.activeHIT;
+			for(var i = 0; i < _ids.length; i++){
+				var _hitID = _ids[i];
+				$.ajax({
+					url:"http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_hitID,
+					dataType:"json",
+					beforeSend:function(){
+						console.log("http://stevenjamesmoore.com/api/values/GetHITResults?hitID="+_hitID)
+					},
+					success:function(response){
+						$("#results .json").append(response.replace(new RegExp('{', 'g'),'').replace(new RegExp('}', 'g'),'').replace(new RegExp('"', 'g'),'').replace(new RegExp(',', 'g'),"<br />") + "<br /><br />");
+					}
+				})
+			}
+		})
+	})
+	
 	$(".click").click(function(){
 		if(pageImages.length == 0){
 			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -250,10 +280,10 @@ $(document).ready(function() {
 				success:function(response){
 					var activeHIT = _storage.activeHIT;
 					activeHIT.push(JSON.parse(response).HitID);
+					chrome.storage.sync.set({"activeHIT" : activeHIT},function(){});
 					
 					var background = chrome.extension.getBackgroundPage();
 					background.tryGetResults();
-					chrome.storage.sync.set({"activeHIT" : activeHIT},function(){});
 					
 					var toRemove = ['sessionQuestion','sessionPay','sessionOpinion','sessionAccelerate','image1','image2'];
 					chrome.storage.sync.remove(toRemove, function() {
