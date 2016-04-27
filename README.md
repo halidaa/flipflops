@@ -16,10 +16,11 @@ Flipflop is a Google Chrome extension that helps indecisive people make decision
 1. Click on the browser action button
 2. Type in a question for context, to present to your worker
 3. Select an image from the website or submit a link. There's an option to upload your own image, but tbh it's still buggy.
-4. You can switch tabs/select images from different tabs
-5. Select the number of workers you want to get opinions from. You can enter any amount, but we recommend an odd number under 20, because you'll be waiting a long time if you choose 5000 and you may even get a tie.
-6. Select accelerate if you want immediate result when there's a clear majority.
-7. You'll get a chrome notification when a decision is available!
+4. Don't forget to click the tiny checkmark when you've picked the image.
+5. You can switch tabs/select images from different tabs
+6. Select the number of workers you want to get opinions from. You can enter any amount, but we recommend an odd number under 20, because you'll be waiting a long time if you choose 5000 and you may even get a tie.
+7. Select accelerate if you want immediate result when there's a clear majority.
+8. You will (should) get a chrome notification when a decision is available!
 <br />
 <br />
 
