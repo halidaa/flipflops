@@ -27,3 +27,8 @@ Flipflop is a Google Chrome extension that helps indecisive people make decision
 #### Beware of bugs:
 - Uploading your own image is still buggy
 - When you submit, don't close the popup until it's done loading, or the HIT won't be posted! This shouldn't take long, but just in case your connection isn't ideal.
+<br />
+<br />
+
+#### Contributors:
+[@kathyu8](http://github.com/kathyu8) [@StevenJamesMoore](http://github.com/StevenJamesMoore) [@srelwani](http://github.com/srelwani)
