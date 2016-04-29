@@ -7,8 +7,9 @@ Flipflop is a Google Chrome extension that helps indecisive people make decision
 ## How to install:
 1. Clone/download the extension to your machine
 2. Navigate to chrome://extensions on your Google Chrome
-3. Choose "Load unpacked extension..."
-4. Select the working directory for flipflops
+3. Make sure the Developer Mode box on the top right is checked
+4. Choose "Load unpacked extension..."
+5. Select the working directory for flipflops
 <br />
 <br />
 
