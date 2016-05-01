@@ -42,6 +42,10 @@ $(document).ready(function() {
 			  chrome.storage.sync.set({"activeHIT" : []},function(){});
 		  if(items.description == undefined)
 			  chrome.storage.sync.set({"description" : "Please answer this HIT truthfully, since it's important for the person who asked for your opinion :)"},function(){});
+		  if(items.payment_rate == undefined)
+			  chrome.storage.sync.set({"payment_rate" : 5},function(){});
+		  if(items.is_accelerated == undefined)
+			  chrome.storage.sync.set({"is_accelerated" : false},function(){});
 		}
 	});
 	
