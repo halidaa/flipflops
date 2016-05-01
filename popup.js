@@ -40,6 +40,8 @@ $(document).ready(function() {
 		  }
 		  if(items.activeHIT == undefined)
 			  chrome.storage.sync.set({"activeHIT" : []},function(){});
+		  if(items.description == undefined)
+			  chrome.storage.sync.set({"description" : "Please answer this HIT truthfully, since it's important for the person who asked for your opinion :)"},function(){});
 		}
 	});
 	
